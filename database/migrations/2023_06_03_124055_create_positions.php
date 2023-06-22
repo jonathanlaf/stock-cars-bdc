@@ -16,8 +16,15 @@ return new class extends Migration
             $table->unsignedBigInteger('competitor_id');
             $table->unsignedBigInteger('race_id');
             $table->integer('position');
-            $table->foreign('competitor_id')->references('id')->on('competitors');
-            $table->foreign('race_id')->references('id')->on('races');
+            $table->softDeletes();
+            $table->timestamps();
+
+            $table->foreignId('competitor_id')
+                  ->constrained('competitors')
+                  ->onDelete('cascade');
+            $table->foreignId('race_id')
+                  ->constrained('races')
+                  ->onDelete('cascade');
         });
     }
 

@@ -2,7 +2,7 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
+use Laravel\Nova\Fields\HasManyThrough;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
@@ -16,7 +16,7 @@ class Competitor extends Resource
      *
      * @var class-string<\App\Models\Competitor>
      */
-    public static $model = \App\Models\Competitor::class;
+    public static string $model = \App\Models\Competitor::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -37,7 +37,8 @@ class Competitor extends Resource
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param NovaRequest $request
+     *
      * @return array
      */
     public function fields(NovaRequest $request): array
@@ -45,26 +46,36 @@ class Competitor extends Resource
         return [
             ID::make()->sortable(),
             Text::make('Name')->sortable()->required(),
-            Number::make('Number')->min(1)->sortable()->required(),
+            HasManyThrough::make('Classes', 'competitorClass', 'App\Nova\CompetitorClass'),
             Select::make('Class')->searchable()->options([
-                'Enduro',
-                'Mini mods',
-                'Sport Compact',
-                '8 Cylinders',
-                '4 Cylinders Open',
-                'STR',
-                'Women'
+                'Enduro' => 'Enduro',
+                'Mini mods' => 'Mini mods',
+                'Sport Compact' => 'Sport Compact',
+                '8 Cylinders' => '8 Cylinders',
+                '4 Cylinders Open' => '4 Cylinders Open',
+                'STR' => 'STR',
+                'Women' => 'Women'
             ])->required(),
+            /*Number::make('Score', function () {
+                $scoreRules = \App\Models\ScoreRule::where('race_type_id', $this->race->race_type_id)->where('position', $this->position)->get()->pluck('points')->toArray();
+                if (is_array($scoreRules) && !empty($scoreRules)) {
+                    $score = $scoreRules[0];
+                } else {
+                    $score = 0;
+                }
+
+                return $score;
+            })*/
         ];
     }
 
     /**
      * Get the cards available for the request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param NovaRequest $request
      * @return array
      */
-    public function cards(NovaRequest $request)
+    public function cards(NovaRequest $request): array
     {
         return [];
     }
@@ -72,10 +83,10 @@ class Competitor extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param NovaRequest $request
      * @return array
      */
-    public function filters(NovaRequest $request)
+    public function filters(NovaRequest $request): array
     {
         return [];
     }
@@ -83,10 +94,10 @@ class Competitor extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param NovaRequest $request
      * @return array
      */
-    public function lenses(NovaRequest $request)
+    public function lenses(NovaRequest $request): array
     {
         return [];
     }
@@ -94,10 +105,10 @@ class Competitor extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param NovaRequest $request
      * @return array
      */
-    public function actions(NovaRequest $request)
+    public function actions(NovaRequest $request): array
     {
         return [];
     }

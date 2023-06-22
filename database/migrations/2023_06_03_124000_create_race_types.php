@@ -14,7 +14,14 @@ return new class extends Migration
         Schema::create('race_types', function (Blueprint $table) {
             $table->id();
             $table->string('type');
+            $table->softDeletes();
+            $table->timestamps();
         });
+
+        Artisan::call( 'db:seed', [
+                '--class' => 'RaceTypeSeeder',
+                '--force' => true ]
+        );
     }
 
     /**

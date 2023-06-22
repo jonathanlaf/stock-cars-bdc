@@ -15,7 +15,16 @@ return new class extends Migration
             $table->id();
             $table->date('date');
             $table->unsignedBigInteger('race_type_id');
-            $table->foreign('race_type_id')->references('id')->on('race_types');
+            $table->unsignedBigInteger('race_class_id');
+            $table->softDeletes();
+            $table->timestamps();
+
+            $table->foreignId('race_type_id')
+                  ->constrained('race_types')
+                  ->onDelete('cascade');
+            $table->foreignId('race_class_id')
+                  ->constrained('race_classes')
+                  ->onDelete('cascade');
         });
     }
 

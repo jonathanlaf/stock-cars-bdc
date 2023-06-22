@@ -16,7 +16,16 @@ return new class extends Migration
             $table->integer('position');
             $table->integer('points');
             $table->unsignedBigInteger('race_type_id');
-            $table->foreign('race_type_id')->references('id')->on('race_types');
+            $table->unsignedBigInteger('race_class_id');
+            $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreignId('race_type_id')
+                  ->constrained('race_types')
+                  ->onDelete('cascade');
+            $table->foreignId('race_class_id')
+                  ->constrained('race_classes')
+                  ->onDelete('cascade');
         });
     }
 

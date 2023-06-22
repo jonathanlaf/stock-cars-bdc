@@ -11,12 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('competitors', function (Blueprint $table) {
+        Schema::create('race_classes', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('class');
             $table->softDeletes();
             $table->timestamps();
         });
+
+        Artisan::call( 'db:seed', [
+                '--class' => 'RaceClassSeeder',
+                '--force' => true ]
+        );
     }
 
     /**
@@ -24,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('competitors');
+        Schema::dropIfExists('race_classes');
     }
 };
